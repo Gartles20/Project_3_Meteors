@@ -1,42 +1,59 @@
 import pandas as pd
 from flask import Flask, jsonify, render_template, redirect, request
+from sql_helper import SQLHelper
+import os 
 from flask_sqlalchemy import SQLAlchemy
 
-# Flask Setup
+# Initialize Flask app
 app = Flask(__name__)
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Remove caching
-app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///C:\Users\vsanh\OneDrive\Data Analysis HW\Projects\Project_3_Meteors\Database\meteorites.sqlite"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
-# Define Meteorite model
-class Meteorites(db.Model):
-    __tablename__ = "meteorites"  # Make sure this matches your actual table name
-    id = db.Column(db.Integer, primary_key=True)
-    rec_class = db.Column(db.String(50))
-    year = db.Column(db.Integer)
-    mass = db.Column(db.Float)
-    rec_lat = db.Column(db.Float)
-    rec_long = db.Column(db.Float)
+# Flask app config
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DATABASE_PATH = os.path.join(BASE_DIR, "database", "meteorites.sqlite")
 
-# Route: Get all meteorites
-@app.route("/api/meteorites", methods=["GET"])
-def get_meteorites():
-    results = Meteorites.query.all()
-    return jsonify([{
-        "rec_class": m.rec_class,
-        "year": m.year,
-        "mass": m.mass,
-        "lat": m.rec_lat,
-        "lon": m.rec_long
-    } for m in results])
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DATABASE_PATH}"
 
-# Test route
+# SQL Helper
+sql_helper = SQLHelper()
+
+# STATIC ROUTES
+
 @app.route("/")
-def home():
-    return "Meteorite API is running!"
+def welcome():
+    return render_template("index.html")
+
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
+@app.route("/map")
+def map():
+    return render_template("map.html")
+
+@app.route("/about_us")
+def about_us():
+    return render_template("about_us.html")
+
+@app.route("/works_cited")
+def works_cited():
+    return render_template("works_cited.html")
+
+# API ROUTES
+
+@app.route("/api/v1.0/meteorite_counts")
+def meteorite_counts():
+    # Execute the query to get meteorite counts
+    results = sql_helper.query_meteorite_counts()
+
+    # Convert the DataFrame to a List of Dictionaries
+    data = results.to_dict(orient="records")
+
+    # Return the data as a JSON response
+    return jsonify(data)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
