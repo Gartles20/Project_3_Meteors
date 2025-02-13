@@ -52,6 +52,17 @@ def meteorite_counts():
     return jsonify(data)
 
 
+@app.route("/api/v1.0/data/<min_year>")
+def data(min_year):
+    # Execute the query to get meteorite counts
+    results = sql_helper.query_data(min_year)
+
+    # Convert the DataFrame to a List of Dictionaries
+    data = results.to_dict(orient="records")
+
+    # Return the data as a JSON response
+    return jsonify(data)
+
 if __name__ == "__main__":
     app.run(debug=True)
 

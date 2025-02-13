@@ -37,6 +37,32 @@ class SQLHelper():
 
         # Return the DataFrame (or you can return rows if you prefer)
         return df
+    
+    def query_data(self, min_year):
+        conn = self.engine.connect()  # Raw SQL/Pandas
+
+        # Define Query
+        query = text(f"""SELECT
+                    Year as year,
+                    rec_class as class,
+                    mass as mass,
+                    rec_lat as latitude,
+                    rec_long as longitude
+                FROM
+                    meteorites
+                WHERE
+                    Year >= {min_year}
+                ORDER BY
+                    Year asc;""")
+        
+        # Execute the query and load the results into a DataFrame
+        df = pd.read_sql(query, con=conn)
+
+        # Close the connection
+        conn.close()
+
+        # Return the DataFrame (or you can return rows if you prefer)
+        return df
 
 
     
