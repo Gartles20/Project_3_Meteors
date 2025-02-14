@@ -73,10 +73,13 @@ function makeTable(data) {
 
 
 function makeBarPlot(data) {
+  // Sort data by count in descending order and take the top 15
+  let sortedData = data.sort((a, b) => b.count - a.count).slice(0, 15);
+
   // Create Trace
   let trace = {
-    x: data.map(row => row.rec_class),
-    y: data.map(row => row.count),
+    x: sortedData.map(row => row.rec_class),
+    y: sortedData.map(row => row.count),
     type: 'bar',
     marker: {
       color: 'firebrick'
@@ -89,7 +92,7 @@ function makeBarPlot(data) {
   // Apply a title to the layout
   let layout = {
     title: {
-      text: `Number of Meteorites by Class`
+      text: `Top 15 Meteorite Classes by Count`
     },
     yaxis: {
       title: {
@@ -99,11 +102,13 @@ function makeBarPlot(data) {
     xaxis: {
       title: {
         text: 'Class'
-      }
+      },
+      tickangle: -45  // Rotate labels for better readability
     },
     height: 600
   }
 
-  // Render the plot to the div tag with id "plot1"
-  Plotly.newPlot('plot1', traces, layout);
+  // Render the plot to the div tag with id "plot"
+  Plotly.newPlot('plot', traces, layout);
 }
+
