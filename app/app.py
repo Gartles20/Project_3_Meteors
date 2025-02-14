@@ -53,13 +53,18 @@ def meteorite_counts():
 
 @app.route("/api/v1.0/data/<min_year>")
 def data(min_year):
-    # Execute the query to get meteorite counts
+    try:
+        min_year = int(min_year)  # Convert to integer
+    except ValueError:
+        return jsonify({"error": "Invalid year format. Please use an integer."}), 400
+
+    # Execute the query
     results = sql_helper.query_data(min_year)
 
-    # Convert the DataFrame to a List of Dictionaries
+    # Convert DataFrame to a List of Dictionaries
     data = results.to_dict(orient="records")
 
-    # Return the data as a JSON response
+    # Return JSON response
     return jsonify(data)
 
 if __name__ == "__main__":
