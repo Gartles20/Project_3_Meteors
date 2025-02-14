@@ -2,7 +2,6 @@ import pandas as pd
 from flask import Flask, jsonify, render_template, redirect, request
 from sql_helper import SQLHelper
 import os 
-from flask_sqlalchemy import SQLAlchemy
 
 # Initialize Flask app
 app = Flask(__name__)

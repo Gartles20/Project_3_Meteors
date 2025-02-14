@@ -38,31 +38,32 @@ class SQLHelper():
         # Return the DataFrame (or you can return rows if you prefer)
         return df
     
-    def query_data(self, min_year):
-        conn = self.engine.connect()  # Raw SQL/Pandas
+def query_data(self, min_year):
+    conn = self.engine.connect()
 
-        # Define Query
-        query = text(f"""SELECT
-                    Year as year,
-                    rec_class as class,
-                    mass as mass,
-                    rec_lat as latitude,
-                    rec_long as longitude
-                FROM
-                    meteorites
-                WHERE
-                    Year >= {min_year}
-                ORDER BY
-                    Year asc;""")
-        
-        # Execute the query and load the results into a DataFrame
-        df = pd.read_sql(query, con=conn)
+    # Define Query using parameterized SQL to prevent injection
+    query = text("""
+        SELECT
+            Year as year,
+            rec_class as class,
+            mass as mass,
+            rec_lat as latitude,
+            rec_long as longitude
+        FROM
+            meteorites
+        WHERE
+            Year >= :min_year
+        ORDER BY
+            Year ASC;
+    """)
 
-        # Close the connection
-        conn.close()
+    # Execute query with parameters safely
+    df = pd.read_sql(query, con=conn, params={"min_year": min_year})
 
-        # Return the DataFrame (or you can return rows if you prefer)
-        return df
+    # Close the connection
+    conn.close()
+
+    return df
 
 
     
