@@ -29,7 +29,7 @@ function doWork() {
 
   // get value
   let min_year = d3.select("#min-year").property("value"); // user input
-  let url1 = `/api/v1.0/meteorite_counts`;
+  let url1 = `/api/v1.0/meteorite_counts/${min_year}`;
   let url2 = `/api/v1.0/data/${min_year}`
 
   // Make Request

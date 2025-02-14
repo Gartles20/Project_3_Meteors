@@ -12,15 +12,17 @@ class SQLHelper:
 
     #################################################################
 
-    def query_meteorite_counts(self):
+    def query_meteorite_counts(self, min_year):
         """Query meteorite counts grouped by class."""
         with self.engine.connect() as conn:
             query = text("""
                 SELECT rec_class, COUNT(*) as count
                 FROM meteorites
+                WHERE
+                    Year >= :min_year
                 GROUP BY rec_class
             """)
-            df = pd.read_sql(query, con=conn)
+            df = pd.read_sql(query, con=conn, params={"min_year": min_year})
         return df  # No need to manually close with `with` statement
 
     #################################################################
