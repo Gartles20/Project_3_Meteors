@@ -1,5 +1,5 @@
 import pandas as pd
-from flask import Flask, jsonify, render_template, redirect, request
+from flask import Flask, jsonify, render_template
 from sql_helper import SQLHelper
 import os 
 
@@ -51,20 +51,11 @@ def meteorite_counts():
     return jsonify(data)
 
 
-@app.route("/api/v1.0/data/<min_year>")
+@app.route("/api/v1.0/data/<int:min_year>")  # Ensures min_year is an integer
+# you have to type "/api/v1.0/data/2000" to get the json data
 def data(min_year):
-    try:
-        min_year = int(min_year)  # Convert to integer
-    except ValueError:
-        return jsonify({"error": "Invalid year format. Please use an integer."}), 400
-
-    # Execute the query
     results = sql_helper.query_data(min_year)
-
-    # Convert DataFrame to a List of Dictionaries
     data = results.to_dict(orient="records")
-
-    # Return JSON response
     return jsonify(data)
 
 if __name__ == "__main__":
