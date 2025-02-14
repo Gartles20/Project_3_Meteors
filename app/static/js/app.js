@@ -61,8 +61,8 @@ function makeTable(data) {
     table_row.append("td").text(row.year);
     table_row.append("td").text(row.mass);
     table_row.append("td").text(row.class);
-    table_row.append("td").text(row.Latitude);
-    table_row.append("td").text(row.Longitude);
+    table_row.append("td").text(row.latitude);
+    table_row.append("td").text(row.longitude);
   }
 
   // Make Table Interactive (again)
