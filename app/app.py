@@ -39,16 +39,17 @@ def works_cited():
 
 # API ROUTES
 
-@app.route("/api/v1.0/meteorite_counts")
-def meteorite_counts():
+@app.route("/api/v1.0/meteorite_counts/<int:min_year>")
+def meteorite_counts(min_year):
     # Execute the query to get meteorite counts
-    results = sql_helper.query_meteorite_counts()
+    results = sql_helper.query_meteorite_counts(min_year)
 
     # Convert the DataFrame to a List of Dictionaries
     data = results.to_dict(orient="records")
 
     # Return the data as a JSON response
     return jsonify(data)
+
 
 
 @app.route("/api/v1.0/data/<int:min_year>")  # Ensures min_year is an integer
