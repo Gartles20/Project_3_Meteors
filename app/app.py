@@ -59,12 +59,12 @@ def data(min_year):
     data = results.to_dict(orient="records")
     return jsonify(data)
 
-@app.route("/api/v1.0/data/<int:min_year>")  # Ensures min_year is an integer
-# you have to type "/api/v1.0/data/2000" to get the json data
-def data(min_year):
-    results = sql_helper.query_data(min_year)
+@app.route("/api/v1.0/map_data")
+def map_data(min_year):
+    results = sql_helper.map_data(min_year)
     data = results.to_dict(orient="records")
     return jsonify(data)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

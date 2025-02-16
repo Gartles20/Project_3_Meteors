@@ -47,6 +47,25 @@ class SQLHelper:
             df = pd.read_sql(query, con=conn, params={"min_year": min_year})
         return df  # No need to manually close with `with` statement
 
+    def map_data(self, min_year):
+        with self.engine.connect() as conn:
+            query = text("""
+            SELECT 
+                rec_lat, 
+                rec_long, 
+                mass, 
+                COUNT(*) AS num_meteorites
+            FROM meteorites
+            WHERE (:min_year IS NULL OR year >= :min_year)
+            GROUP BY rec_lat, rec_long, mass
+            ORDER BY mass DESC;
+        """)
+        
+        df = pd.read_sql(query, con=conn, params={"min_year": min_year})
+    
+        return df
+
+
 
 
     
