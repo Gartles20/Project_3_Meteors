@@ -1,4 +1,6 @@
 import pandas as pd
+import plotly.express as px
+import matplotlib.pyplot as plt
 from flask import Flask, jsonify, render_template
 from sql_helper import SQLHelper
 import os 
@@ -62,6 +64,12 @@ def data(min_year):
 @app.route("/api/v1.0/map_data")
 def map_data(min_year):
     results = sql_helper.map_data(min_year)
+    data = results.to_dict(orient="records")
+    return jsonify(data)
+
+@app.route("/api/v1.0/sunburst_data/<int:min_year>")  # Ensures min_year is an integer
+def sunburst_data(min_year):
+    results = sql_helper.sunburst_data(min_year)
     data = results.to_dict(orient="records")
     return jsonify(data)
 

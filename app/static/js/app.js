@@ -31,6 +31,8 @@ function doWork() {
   let min_year = d3.select("#min-year").property("value"); // user input
   let url1 = `/api/v1.0/meteorite_counts/${min_year}`;
   let url2 = `/api/v1.0/data/${min_year}`
+  let url3 = `/api/v1.0/sunburst_data/${min_year}`
+  
 
   // Make Request
   d3.json(url1).then(function (data) {
@@ -42,7 +44,12 @@ function doWork() {
     // Make Table
     makeTable(data);
   });
+  d3.json(url3).then(function (data) {
+    // Make Plot
+    makeSunburstChart(data);
+  });
 }
+
 
 
 function makeTable(data) {
@@ -109,6 +116,29 @@ function makeBarPlot(data) {
   }
 
   // Render the plot to the div tag with id "plot"
-  Plotly.newPlot('plot', traces, layout);
+  Plotly.newPlot('plot2', traces, layout);
 }
 
+
+function makeSunburstChart(data) {
+  console.log(data);
+  let labels = data.map(row=>row.label);
+  let parents = data.map(row => row.parent);
+  let values = data.map(row => row.count);
+
+  let trace = {
+    type: "sunburst",
+    labels: labels,
+    parents: parents,
+    values: values,
+    maxdepth: 2
+  };
+
+  let layout = {
+    title: "Meteorite Classification by Year",
+    height: 600,
+    margin: { t: 50, l: 0, r: 0, b: 0 }
+  };
+
+  Plotly.newPlot("plot", [trace], layout);
+}
