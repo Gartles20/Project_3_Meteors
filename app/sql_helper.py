@@ -30,11 +30,12 @@ class SQLHelper:
             SELECT
                 Year as year,
                 rec_class as class,
-                mass as mass,
-                rec_lat as latitude,
-                rec_long as longitude
+                COUNT(*) as count,
+                SUM(mass) as sum_mass,
+                AVG(mass) as avg_mass
             FROM meteorites
             WHERE Year >= :min_year AND Year <= :max_year
+            GROUP BY class, Year
             ORDER BY Year ASC;
         """)
         return self._execute_query(query, {"min_year": min_year, "max_year": max_year})

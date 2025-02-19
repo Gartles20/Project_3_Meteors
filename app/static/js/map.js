@@ -56,8 +56,8 @@ function createMap(complaint_type) {
   
       // Step 4: INITIALIZE THE MAP
       let myMap = L.map("map", {
-        center: [40.7128, -74.0059],
-        zoom: 7,
+        center: [0, -10],
+        zoom: 2,
         layers: [street, markers]
       });
   

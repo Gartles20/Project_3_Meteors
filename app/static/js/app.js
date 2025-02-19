@@ -66,10 +66,10 @@ function makeTable(data) {
 
     // Append Cells
     table_row.append("td").text(row.year);
-    table_row.append("td").text(row.mass);
     table_row.append("td").text(row.class);
-    table_row.append("td").text(row.latitude);
-    table_row.append("td").text(row.longitude);
+    table_row.append("td").text(row.count);
+    table_row.append("td").text(row.sum_mass);
+    table_row.append("td").text(row.avg_mass);
   }
 
   // Make Table Interactive (again)
