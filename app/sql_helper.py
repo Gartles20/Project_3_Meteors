@@ -16,7 +16,7 @@ class SQLHelper:
         """Query meteorite counts grouped by class."""
         with self.engine.connect() as conn:
             query = text("""
-                SELECT rec_class, COUNT(*) as count
+                SELECT rec_class, COUNT(*) as count, Year as year
                 FROM meteorites
                 WHERE
                     Year >= :min_year
@@ -65,6 +65,58 @@ class SQLHelper:
     
         return df
 
+    def sunburst_data(self, min_year):
+            with self.engine.connect() as conn:
+            # Query for rec_class and year
+                query1 = text("""
+                        WITH TopYears AS (
+                            SELECT Year
+                            FROM meteorites
+                            GROUP BY Year
+                            ORDER BY COUNT(*) DESC
+                            LIMIT 15
+                        ),
+
+                        -- Get the top 10 rec_class for each year
+                        TopClasses AS (
+                            SELECT rec_class, Year, COUNT(*) AS count,
+                                ROW_NUMBER() OVER (PARTITION BY Year ORDER BY COUNT(*) DESC) AS rank
+                            FROM meteorites
+                            WHERE Year IN (SELECT Year FROM TopYears)
+                            GROUP BY rec_class, Year
+                        )
+
+                        -- First query: Filtered rec_class breakdown by year
+                        SELECT rec_class AS label, count, Year AS parent
+                        FROM TopClasses
+                        WHERE rank <= 10
+                        ORDER BY Year, count DESC;
+                """)
+                df1 = pd.read_sql(query1, con=conn, params={"min_year": min_year})
+                print("Query 1 Success:", df1.head())  # Debugging output
+
+                # Query for year-level aggregation
+                query2 = text("""
+                    WITH TopYears AS (
+                        SELECT Year
+                        FROM meteorites
+                        GROUP BY Year
+                        ORDER BY COUNT(*) DESC
+                        LIMIT 15
+                    )
+                    SELECT Year AS label, COUNT(*) AS count, '' AS parent
+                    FROM meteorites
+                    WHERE Year IN (SELECT Year FROM TopYears) AND Year >= :min_year
+                    GROUP BY Year
+                    ORDER BY count DESC;
+                """)
+                df2 = pd.read_sql(query2, con=conn, params={"min_year": min_year})
+                print("Query 2 Success:", df2.head())  # Debugging output
+            # Add parent column to df2
+            df2["parent"] = ""
+            # Combine DataFrames
+            df = pd.concat([df1, df2], ignore_index=True)
+            return df
 
 
 
