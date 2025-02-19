@@ -29,9 +29,10 @@ function doWork() {
 
   // get value
   let min_year = d3.select("#min-year").property("value"); // user input
-  let url1 = `/api/v1.0/meteorite_counts/${min_year}`;
-  let url2 = `/api/v1.0/data/${min_year}`
-  let url3 = `/api/v1.0/sunburst_data/${min_year}`
+  let max_year = d3.select("#max-year").property("value"); // user input
+  let url1 = `/api/v1.0/meteorite_counts/${min_year}/${max_year}`;
+  let url2 = `/api/v1.0/data/${min_year}/${max_year}`;
+  let url3 = `/api/v1.0/sunburst_data/${min_year}/${max_year}`;
   
 
   // Make Request
@@ -56,7 +57,6 @@ function makeTable(data) {
   // Clear Table
   tbody.html("");
   dt_table.clear().destroy();
-
   // Create Table
   for (let i = 0; i < data.length; i++) {
     let row = data[i];

@@ -41,10 +41,10 @@ def works_cited():
 
 # API ROUTES
 
-@app.route("/api/v1.0/meteorite_counts/<int:min_year>")
-def meteorite_counts(min_year):
+@app.route("/api/v1.0/meteorite_counts/<int:min_year>/<int:max_year>")
+def meteorite_counts(min_year, max_year):
     # Execute the query to get meteorite counts
-    results = sql_helper.query_meteorite_counts(min_year)
+    results = sql_helper.query_meteorite_counts(min_year, max_year)
 
     # Convert the DataFrame to a List of Dictionaries
     data = results.to_dict(orient="records")
@@ -54,10 +54,10 @@ def meteorite_counts(min_year):
 
 
 
-@app.route("/api/v1.0/data/<int:min_year>")  # Ensures min_year is an integer
+@app.route("/api/v1.0/data/<int:min_year>/<int:max_year>")  # Ensures min_year is an integer
 # you have to type "/api/v1.0/data/2000" to get the json data
-def data(min_year):
-    results = sql_helper.query_data(min_year)
+def data(min_year, max_year):
+    results = sql_helper.query_data(min_year, max_year)
     data = results.to_dict(orient="records")
     return jsonify(data)
 
@@ -67,9 +67,9 @@ def map_data():
     data = results.to_dict(orient="records")
     return jsonify(data)
 
-@app.route("/api/v1.0/sunburst_data/<int:min_year>")  # Ensures min_year is an integer
-def sunburst_data(min_year):
-    results = sql_helper.sunburst_data(min_year)
+@app.route("/api/v1.0/sunburst_data/<int:min_year>/<int:max_year>")  # Ensures min_year is an integer
+def sunburst_data(min_year, max_year):
+    results = sql_helper.sunburst_data(min_year, max_year)
     data = results.to_dict(orient="records")
     return jsonify(data)
 

@@ -12,19 +12,19 @@ class SQLHelper:
 
     #################################################################
 
-    def query_meteorite_counts(self, min_year):
+    def query_meteorite_counts(self, min_year, max_year):
         """Query meteorite counts grouped by class."""
         query = text("""
             SELECT rec_class, COUNT(*) as count, Year as year
             FROM meteorites
-            WHERE Year >= :min_year
+            WHERE Year >= :min_year AND Year <= :max_year
             GROUP BY rec_class
         """)
-        return self._execute_query(query, {"min_year": min_year})
+        return self._execute_query(query, {"min_year": min_year, "max_year": max_year})
 
     #################################################################
 
-    def query_data(self, min_year):
+    def query_data(self, min_year, max_year):
         """Query meteorite data filtered by year."""
         query = text("""
             SELECT
@@ -34,14 +34,14 @@ class SQLHelper:
                 rec_lat as latitude,
                 rec_long as longitude
             FROM meteorites
-            WHERE Year >= :min_year
+            WHERE Year >= :min_year AND Year <= :max_year
             ORDER BY Year ASC;
         """)
-        return self._execute_query(query, {"min_year": min_year})
+        return self._execute_query(query, {"min_year": min_year, "max_year": max_year})
 
     #################################################################
 
-    def map_data(self, ):
+    def map_data(self):
         """Query for map data, limiting the number of results to improve performance."""
         query = text("""
             SELECT 
@@ -58,12 +58,13 @@ class SQLHelper:
 
     #################################################################
 
-    def sunburst_data(self, min_year):
+    def sunburst_data(self, min_year, max_year):
         """Get data for a sunburst chart."""
         query1 = text("""
             WITH TopYears AS (
                 SELECT Year
                 FROM meteorites
+                WHERE Year >= :min_year AND Year <= :max_year
                 GROUP BY Year
                 ORDER BY COUNT(*) DESC
                 LIMIT 15
@@ -82,23 +83,24 @@ class SQLHelper:
             FROM TopClasses
             ORDER BY Year, count DESC;
         """)
-        df1 = self._execute_query(query1, {"min_year": min_year})
+        df1 = self._execute_query(query1, {"min_year": min_year,"max_year": max_year})
 
         query2 = text("""
             WITH TopYears AS (
                 SELECT Year
                 FROM meteorites
+                WHERE Year >= :min_year AND Year <= :max_year
                 GROUP BY Year
                 ORDER BY COUNT(*) DESC
                 LIMIT 15
             )
             SELECT Year AS label, COUNT(*) AS count, '' AS parent, Year as id
             FROM meteorites
-            WHERE Year IN (SELECT Year FROM TopYears) AND Year >= :min_year
+            WHERE Year IN (SELECT Year FROM TopYears)
             GROUP BY Year
             ORDER BY count DESC;
         """)
-        df2 = self._execute_query(query2, {"min_year": min_year})
+        df2 = self._execute_query(query2, {"min_year": min_year,"max_year": max_year})
 
         # Add parent column to df2 and combine
         df2["parent"] = ""
