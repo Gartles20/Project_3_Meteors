@@ -89,7 +89,7 @@ function makeBarPlot(data) {
     y: sortedData.map(row => row.count),
     type: 'bar',
     marker: {
-      color: 'firebrick'
+      color: 'cornflowerblue'
     }
   }
 
