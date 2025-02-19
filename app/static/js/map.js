@@ -30,11 +30,11 @@ function createMap(complaint_type) {
       for (let i = 0; i < data.length; i++){
         let row = data[i];
   
-        let marker = L.marker([row.latitude, row.longitude]).bindPopup(`<h1>${row.mass}</h1><h3>${row.year}</h3><h4>${row.class}</h4>`);
+        let marker = L.marker([row.rec_lat, row.rec_long]).bindPopup(`<h1>${row.avg_mass}</h1>`);
         markers.addLayer(marker);
   
         // Heatmap point
-        heatArray.push([row.latitude, row.longitude]);
+        heatArray.push([row.rec_lat, row.rec_long]);
       }
   
       // Create Heatmap Layer
@@ -67,8 +67,7 @@ function createMap(complaint_type) {
   }
   
   function init() {
-    let complaint_type = d3.select("#complaint_type").property("value");
-    createMap(complaint_type);
+    createMap();
   }
   
   // Event Listener

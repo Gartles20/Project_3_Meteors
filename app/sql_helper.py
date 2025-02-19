@@ -41,7 +41,7 @@ class SQLHelper:
 
     #################################################################
 
-    def map_data(self, min_year):
+    def map_data(self, ):
         """Query for map data, limiting the number of results to improve performance."""
         query = text("""
             SELECT 
@@ -50,12 +50,11 @@ class SQLHelper:
                 AVG(mass) AS avg_mass, 
                 COUNT(*) AS num_meteorites
             FROM meteorites
-            WHERE year >= COALESCE(:min_year, 0)
             GROUP BY rec_lat, rec_long
             ORDER BY num_meteorites DESC
-            LIMIT 1000;  -- Limit results to prevent slow performance
+            
         """)
-        return self._execute_query(query, {"min_year": min_year})
+        return self._execute_query(query)
 
     #################################################################
 
@@ -70,15 +69,17 @@ class SQLHelper:
                 LIMIT 15
             ),
             TopClasses AS (
-                SELECT rec_class, Year, COUNT(*) AS count,
-                    ROW_NUMBER() OVER (PARTITION BY Year ORDER BY COUNT(*) DESC) AS rank
-                FROM meteorites
-                WHERE Year IN (SELECT Year FROM TopYears)
-                GROUP BY rec_class, Year
+                SELECT rec_class_group, year, sum(count) as count
+                FROM (
+                    SELECT CASE WHEN COUNT(*) < 100 THEN 'Misc.' Else rec_class END as rec_class_group, Year, COUNT(*) AS count
+                    FROM meteorites
+                    WHERE Year IN (SELECT Year FROM TopYears)
+                    GROUP BY rec_class, Year
+                )
+                GROUP BY rec_class_group, Year
             )
-            SELECT rec_class AS label, count, Year AS parent
+            SELECT rec_class_group AS label, count, Year AS parent, concat(rec_class_group, "_", Year) as id
             FROM TopClasses
-            WHERE rank <= 10
             ORDER BY Year, count DESC;
         """)
         df1 = self._execute_query(query1, {"min_year": min_year})
@@ -91,7 +92,7 @@ class SQLHelper:
                 ORDER BY COUNT(*) DESC
                 LIMIT 15
             )
-            SELECT Year AS label, COUNT(*) AS count, '' AS parent
+            SELECT Year AS label, COUNT(*) AS count, '' AS parent, Year as id
             FROM meteorites
             WHERE Year IN (SELECT Year FROM TopYears) AND Year >= :min_year
             GROUP BY Year

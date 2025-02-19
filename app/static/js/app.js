@@ -125,13 +125,15 @@ function makeSunburstChart(data) {
   let labels = data.map(row=>row.label);
   let parents = data.map(row => row.parent);
   let values = data.map(row => row.count);
+  let ids = data.map(row=>row.id);
 
   let trace = {
     type: "sunburst",
+    ids:ids,
     labels: labels,
     parents: parents,
     values: values,
-    maxdepth: 2
+    branchvalues: "total"
   };
 
   let layout = {
