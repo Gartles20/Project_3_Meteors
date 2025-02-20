@@ -60,17 +60,21 @@
               <div class="col-md-12">    
 
             <!-- Input Section -->
-            <label for="min-year" class="col-form-label mt-4">Start Year:</label>
-            <input type="number" id="min-year" class="form-control" name="min-year" value="1950" min="0">
-
-            <label for="max-year" class="col-form-label mt-4">End Year:</label>
-            <input type="number" id="max-year" class="form-control" name="max-year" value="2013" max="2013" >
-
-            <button type="button" id="filter-btn" class="btn btn-primary">Enter</button>
+            <div class="row">
+              <div class="col-md-6">
+                <label for="min-year" class="col-form-label mt-4">Start Year:</label>
+                <input type="number" id="min-year" class="form-control" name="min-year" value="1950" min="0">
+              </div>
+              <div class="col-md-6">
+                <label for="max-year" class="col-form-label mt-4">End Year:</label>
+                <input type="number" id="max-year" class="form-control" name="max-year" value="2013" max="2013">
+              </div>
+            </div>
+            <button type="button" id="filter-btn" class="btn btn-primary mt-4">Enter</button>
+          </div>
         </div>
       </div>
-    </div>
-<br><br>
+      <div class="row">
   <!-- Table Section -->
     <h3 class="text-xl font-bold mb-2">Data Table</h3>
     <div class="container-fluid">

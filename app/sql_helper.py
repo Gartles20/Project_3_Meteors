@@ -42,20 +42,21 @@ class SQLHelper:
 
     #################################################################
 
-    def map_data(self):
+    def map_data(self, min_year, max_year):
         """Query for map data, limiting the number of results to improve performance."""
-        query = text("""
-            SELECT 
+        query = text(f"""
+            SELECT
+                year,     
                 rec_lat, 
                 rec_long, 
                 AVG(mass) AS avg_mass, 
                 COUNT(*) AS num_meteorites
             FROM meteorites
+            WHERE year >= :min_year AND year <= :max_year
             GROUP BY rec_lat, rec_long
             ORDER BY num_meteorites DESC
-            
         """)
-        return self._execute_query(query)
+        return self._execute_query(query, {'min_year': min_year, 'max_year': max_year})
 
     #################################################################
 

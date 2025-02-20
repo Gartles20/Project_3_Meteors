@@ -61,9 +61,9 @@ def data(min_year, max_year):
     data = results.to_dict(orient="records")
     return jsonify(data)
 
-@app.route("/api/v1.0/map_data")
-def map_data():
-    results = sql_helper.map_data()
+@app.route("/api/v1.0/map_data/<int:min_year>/<int:max_year>")  # Ensures min_year is an integer
+def map_data(min_year, max_year):
+    results = sql_helper.map_data(min_year, max_year)
     data = results.to_dict(orient="records")
     return jsonify(data)
 
