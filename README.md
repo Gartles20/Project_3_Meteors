@@ -75,9 +75,9 @@ Data Description
     
  Research Questions
  
- Impact Patterns: Is there a geographic pattern to where meteorites are more likely to hit?
- Strike Frequency: How many meteor strikes occur within specific time frames?
- Meteor Classification: Which meteor class encounters Earth most frequently?
+ 1. Impact Patterns: Is there a geographic pattern to where meteorites are more likely to hit?
+ 2. Strike Frequency: How many meteor strikes occur within specific time frames?
+ 3. Meteor Classification: Which meteor class encounters Earth most frequently?
  
  Data Application
  Home Page
