@@ -14,7 +14,7 @@ Project Overview-
  
  Project Structure
  The project directory structure is as follows:
- Project Root
+
  - │── Database/
  -  │ ├── .virtual_documents/
  - │ ├── Create_Database.ipynb
