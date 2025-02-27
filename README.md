@@ -32,6 +32,7 @@ Project Overview-
  - │── .gitignore
  - │── LICENSE
  - │── Project 3 Proposal.pdf
+ - │── Project 3 Writeup.pdf
  - │── Project_3_Meteors_Slides.pdf
  - │── README.md
  
